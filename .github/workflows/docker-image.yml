@@ -31,8 +31,9 @@ jobs:
         docker build --progress plain -t ubuntu-rstudio-3-java ubuntu-rstudio-3-java
         docker build --progress plain -t ubuntu-rstudio-4-r ubuntu-rstudio-4-r
         docker build --progress plain -t ubuntu-rstudio-5-rpackages ubuntu-rstudio-5-rpackages
-        docker build --progress plain -t ubuntu-rstudio:latest ubuntu-rstudio-6-other
+        docker build --progress plain -t ubuntu-rstudio ubuntu-rstudio-6-other
         
     - name: Push to Github Container Repository
       run: |
+        docker tag ubuntu-rstudio ghcr.io/bertcarnell/ubuntu-rstudio:latest
         docker push ghcr.io/bertcarnell/ubuntu-rstudio:latest
