@@ -1,0 +1,58 @@
+name: Ubuntu RStudio CI
+# https://docs.github.com/en/packages/managing-github-packages-using-github-actions-workflows/publishing-and-installing-a-package-with-github-actions#upgrading-a-workflow-that-accesses-ghcrio
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
+
+env:
+  IMAGE_NAME: ubuntu-rstudio
+
+jobs:
+  # Push image to GitHub Packages.
+  # See also https://docs.docker.com/docker-hub/builds/
+  push:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - name:  Check Out
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: |
+          docker build --progress plain -t ubuntu-rstudio-1-system ubuntu-rstudio-1-system
+          docker build --progress plain -t ubuntu-rstudio-2-rstudio ubuntu-rstudio-2-rstudio
+          docker build --progress plain -t ubuntu-rstudio-3-java ubuntu-rstudio-3-java
+          docker build --progress plain -t ubuntu-rstudio-4-r ubuntu-rstudio-4-r
+          docker build --progress plain -t ubuntu-rstudio-5-rpackages ubuntu-rstudio-5-rpackages
+          docker build --progress plain -t $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}" ubuntu-rstudio-6-other
+
+      - name: Docker Login
+        uses: docker/login-action@v2.1.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push image
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "main" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
