@@ -29,6 +29,9 @@ docker build --progress plain -t ubuntu-rstudio ubuntu-rstudio-6-other
 
 ```
 docker build --progress plain -t ubuntu-sms-1 ubuntu-sms-1
+docker build --progress plain -t ubuntu-sms-2 ubuntu-sms-2
+docker build --progress plain -t ubuntu-sms-3 ubuntu-sms-3
+docker build --progress plain -t ubuntu-sms-4 ubuntu-sms-4
 ```
 
 
@@ -36,6 +39,8 @@ docker build --progress plain -t ubuntu-sms-1 ubuntu-sms-1
 
 ```
 docker run --rm -ti ubuntu-rstudio
+docker run --rm -ti aws-rstudio
+docker run --rm -ti ubuntu-sms-r
 ```
 
 To mount a local directory in the docker container:
