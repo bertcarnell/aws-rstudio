@@ -1,7 +1,7 @@
+# ----------- https://github.com/jupyter/docker-stacks/blob/main/docker-stacks-foundation/Dockerfile -------
+
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-
-# ----------- https://github.com/jupyter/docker-stacks/blob/main/docker-stacks-foundation/Dockerfile -------
 
 # Ubuntu 22.04 (jammy)
 # https://hub.docker.com/_/ubuntu/tags?page=1&name=jammy
@@ -31,8 +31,10 @@ RUN apt-get update --yes && \
     # - bzip2 is necessary to extract the micromamba executable.
     bzip2 \
     ca-certificates \
+	curl \
     locales \
     sudo \
+	tar \
     # - tini is installed as a helpful container entrypoint that reaps zombie
     #   processes and such of the actual executable we want to start, see
     #   https://github.com/krallin/tini#why-tini for details.
@@ -55,7 +57,7 @@ ENV PATH="${CONDA_DIR}/bin:${PATH}" \
     HOME="/home/${NB_USER}"
 
 # Copy a script that we will use to correct permissions after running certain commands
-COPY fix-permissions /usr/local/bin/fix-permissions
+COPY deps/fix-permissions /usr/local/bin/fix-permissions
 RUN chmod a+rx /usr/local/bin/fix-permissions
 
 # Enable prompt color in the skeleton .bashrc before creating the default NB_USER
@@ -95,7 +97,7 @@ RUN mkdir "/home/${NB_USER}/work" && \
 # Correct permissions
 # Do all this in a single RUN command to avoid duplicating all of the
 # files across image layers when the permissions change
-COPY --chown="${NB_UID}:${NB_GID}" initial-condarc "${CONDA_DIR}/.condarc"
+COPY --chown="${NB_UID}:${NB_GID}" deps/initial-condarc "${CONDA_DIR}/.condarc"
 WORKDIR /tmp
 RUN set -x && \
     arch=$(uname -m) && \
@@ -103,8 +105,8 @@ RUN set -x && \
         # Should be simpler, see <https://github.com/mamba-org/mamba/issues/1437>
         arch="64"; \
     fi && \
-    wget -qO /tmp/micromamba.tar.bz2 \
-        "https://micromamba.snakepit.net/api/micromamba/linux-${arch}/latest" && \
+    curl -Lsv -o /tmp/micromamba.tar.bz2 \
+        https://micro.mamba.pm/api/micromamba/linux-${arch}/latest && \
     tar -xvjf /tmp/micromamba.tar.bz2 --strip-components=1 bin/micromamba && \
     rm /tmp/micromamba.tar.bz2 && \
     PYTHON_SPECIFIER="python=${PYTHON_VERSION}" && \
@@ -129,7 +131,7 @@ ENTRYPOINT ["tini", "-g", "--"]
 CMD ["start.sh"]
 
 # Copy local files as late as possible to avoid cache busting
-COPY start.sh /usr/local/bin/
+COPY deps/start.sh /usr/local/bin/
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER ${NB_UID}
