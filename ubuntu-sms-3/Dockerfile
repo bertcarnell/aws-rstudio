@@ -1,8 +1,10 @@
+#------------https://github.com/jupyter/docker-stacks/blob/main/minimal-notebook/Dockerfile------------
+
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-ARG OWNER=jupyter
-ARG BASE_CONTAINER=$OWNER/base-notebook
-FROM $BASE_CONTAINER
+#ARG OWNER=jupyter
+#ARG BASE_CONTAINER=$OWNER/base-notebook
+FROM ubuntu-sms-2
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 
@@ -42,4 +44,4 @@ RUN update-alternatives --install /usr/bin/nano nano /bin/nano-tiny 10
 USER ${NB_UID}
 
 # Add R mimetype option to specify how the plot returns from R to the browser
-COPY --chown=${NB_UID}:${NB_GID} Rprofile.site /opt/conda/lib/R/etc/
+COPY --chown=${NB_UID}:${NB_GID} deps/Rprofile.site /opt/conda/lib/R/etc/
