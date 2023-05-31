@@ -14,6 +14,7 @@ on:
       - 'ubuntu-sms-5/**'
       - 'ubuntu-sms-6/**'
       - 'ubuntu-sms-7/**'
+      - '.github/workflows/docker-image-ubuntu-sms.yml'
 
 env:
   IMAGE_NAME: ubuntu-sms-r

@@ -13,6 +13,7 @@ on:
       - 'ubuntu-rstudio-4-r/**'
       - 'ubuntu-rstudio-5-rpackages/**'
       - 'ubuntu-rstudio-6-other/**'
+      - '.github/workflows/docker-image.yml'
 
 env:
   IMAGE_NAME: ubuntu-rstudio
