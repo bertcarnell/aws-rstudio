@@ -4,14 +4,15 @@ name: Ubuntu RStudio CI
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
-      paths:
-        - 'ubuntu-rstudio-1-system/**'
-        - 'ubuntu-rstudio-2-rstudio/**'
-        - 'ubuntu-rstudio-3-java/**'
-        - 'ubuntu-rstudio-4-r/**'
-        - 'ubuntu-rstudio-5-rpackages/**'
-        - 'ubuntu-rstudio-6-other/**'
+    branches: 
+      - 'main'
+    paths:
+      - 'ubuntu-rstudio-1-system/**'
+      - 'ubuntu-rstudio-2-rstudio/**'
+      - 'ubuntu-rstudio-3-java/**'
+      - 'ubuntu-rstudio-4-r/**'
+      - 'ubuntu-rstudio-5-rpackages/**'
+      - 'ubuntu-rstudio-6-other/**'
 
 env:
   IMAGE_NAME: ubuntu-rstudio

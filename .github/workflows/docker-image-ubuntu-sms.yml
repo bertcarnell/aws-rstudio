@@ -4,8 +4,9 @@ name: Ubuntu RStudio CI
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
-      paths:
+    branches:
+      - 'main'
+    paths:
       - 'ubuntu-sms-1/**'
       - 'ubuntu-sms-2/**'
       - 'ubuntu-sms-3/**'
@@ -13,9 +14,6 @@ on:
       - 'ubuntu-sms-5/**'
       - 'ubuntu-sms-6/**'
       - 'ubuntu-sms-7/**'
-    # Publish `v1.2.3` tags as releases.
-    tags:
-      - v*
 
 env:
   IMAGE_NAME: ubuntu-sms-r
