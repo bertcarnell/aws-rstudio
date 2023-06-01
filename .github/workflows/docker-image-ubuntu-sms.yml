@@ -1,4 +1,4 @@
-name: Ubuntu RStudio CI
+name: Ubuntu Sagemaker Studio R Kernel CI
 # https://docs.github.com/en/packages/managing-github-packages-using-github-actions-workflows/publishing-and-installing-a-package-with-github-actions#upgrading-a-workflow-that-accesses-ghcrio
 
 on:
