@@ -138,7 +138,7 @@ RUN apt-get update -y && \
 	
 RUN Rscript -e 'IRkernel::installspec(user = FALSE)'
 
-RUN useradd --non-unique --create-home --shell /bin/bash --gid "${NB_GID}" --uid ${NB_UID} "${NB_USER}"
+#RUN useradd --non-unique --create-home --shell /bin/bash --gid "${NB_GID}" --uid ${NB_UID} "sagemaker-user"
     
 WORKDIR $HOME
 USER ${NB_UID}
